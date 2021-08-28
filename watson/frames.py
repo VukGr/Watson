@@ -45,7 +45,7 @@ class Frame(namedtuple('Frame', HEADERS)):
 
     @property
     def day(self):
-        return self.start.floor('day')
+        return self.start.shift(hours=-4).floor('day')
 
     def __lt__(self, other):
         return self.start < other.start
