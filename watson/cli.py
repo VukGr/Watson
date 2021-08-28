@@ -37,6 +37,7 @@ from .utils import (
     style,
     parse_tags,
     json_arrow_encoder,
+    get_granularity
 )
 
 
@@ -303,8 +304,8 @@ def stop(watson, at_):
     click.echo(output_str.format(
         style('project', frame.project),
         (" " if frame.tags else "") + style('tags', frame.tags),
-        style('time', frame.start.humanize()),
-        style('time', frame.stop.humanize()),
+        style('time', frame.start.humanize(granularity=get_granularity(frame.start))),
+        style('time', frame.stop.humanize(granularity=get_granularity(frame.stop))),
         style('short_id', frame.id),
     ))
     watson.save()
@@ -440,6 +441,7 @@ def status(watson, project, tags, elapsed):
         return
 
     current = watson.current
+    present = arrow.utcnow()
 
     if project:
         click.echo("{}".format(
@@ -455,7 +457,7 @@ def status(watson, project, tags, elapsed):
 
     if elapsed:
         click.echo("{}".format(
-            style('time', current['start'].humanize())
+            style('time', current['start'].humanize(granularity=get_granularity(current['start'])))
         ))
         return
 
@@ -464,7 +466,7 @@ def status(watson, project, tags, elapsed):
     click.echo("Project {}{} started {} ({} {})".format(
         style('project', current['project']),
         (" " if current['tags'] else "") + style('tags', current['tags']),
-        style('time', current['start'].humanize()),
+        style('time', current['start'].humanize(granularity=get_granularity(current['start']))),
         style('date', current['start'].strftime(datefmt)),
         style('time', current['start'].strftime(timefmt))
     ))
@@ -1259,8 +1261,8 @@ def add(watson, args, from_, to, confirm_new_project, confirm_new_tag):
         "Adding project {}{}, started {} and stopped {}. (id: {})".format(
             style('project', frame.project),
             (" " if frame.tags else "") + style('tags', frame.tags),
-            style('time', frame.start.humanize()),
-            style('time', frame.stop.humanize()),
+            style('time', frame.start.humanize(granularity=get_granularity(frame.start))),
+            style('time', frame.stop.humanize(granularity=get_granularity(frame.stop))),
             style('short_id', frame.id)
         )
     )

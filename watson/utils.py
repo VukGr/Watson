@@ -400,3 +400,10 @@ def json_arrow_encoder(obj):
         return obj.for_json()
 
     raise TypeError("Object {} is not JSON serializable".format(obj))
+
+def get_granularity(time):
+    delta_hours, _ = divmod((arrow.now() - time).seconds, 3600)
+    if delta_hours == 0:
+        return 'minute'
+    else:
+        return ['hour', 'minute']
