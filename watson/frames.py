@@ -61,6 +61,7 @@ class Frame(namedtuple('Frame', HEADERS)):
 
 
 class Span(object):
+    # Consider removing timeframe entirely?
     def __init__(self, start, stop, timeframe='day'):
         self.timeframe = timeframe
         self.start = start.floor(self.timeframe)
@@ -183,5 +184,5 @@ class Frames(object):
                 stop = span.stop if frame.stop > span.stop else frame.stop
                 yield frame._replace(start=start, stop=stop)
 
-    def span(self, start, stop):
-        return Span(start, stop)
+    def span(self, start, stop, floor='day'):
+        return Span(start, stop, floor)

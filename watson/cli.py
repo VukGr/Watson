@@ -1039,7 +1039,8 @@ def log(watson, current, reverse, from_, to, projects, tags, ignore_projects,
     """  # noqa
     for start_time in (_ for _ in [day, week, month, luna, year, all]
                        if _ is not None):
-        from_ = start_time
+        from_ = start_time.shift(hours=+4)
+        to = to.shift(hours=+4)
 
     if from_ > to:
         raise click.ClickException("'from' must be anterior to 'to'")
@@ -1063,7 +1064,7 @@ def log(watson, current, reverse, from_, to, projects, tags, ignore_projects,
     if reverse is None:
         reverse = watson.config.getboolean('options', 'reverse_log', True)
 
-    span = watson.frames.span(from_, to)
+    span = watson.frames.span(from_, to, 'hour')
     filtered_frames = watson.frames.filter(
         projects=projects or None, tags=tags or None,
         ignore_projects=ignore_projects or None,
